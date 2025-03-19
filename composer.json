@@ -1,0 +1,78 @@
+{
+    "name": "hryha/laravel-request-logger",
+    "description": "A Laravel package to log requests and responses",
+    "keywords": [
+        "request log",
+        "log",
+        "logger",
+        "debugging",
+        "laravel",
+        "laravel-logger"
+    ],
+    "homepage": "https://github.com/vaniok010/laravel-request-logger",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ivan Hryha",
+            "email": "kobluchka@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Hryha\\RequestLogger\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hryha\\RequestLogger\\Tests\\": "tests/",
+            "Hryha\\RequestLogger\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "require": {
+        "php": "^8.2|^8.3|^8.4",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/http": "^11.0|^12.0",
+        "illuminate/database": "^11.0|^12.0",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "ext-pdo": "*",
+        "nunomaduro/collision": "^8.6",
+        "orchestra/testbench": "^10.1",
+        "laravel/pint": "^1.21",
+        "larastan/larastan": "^3.2"
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ],
+        "lint": "pint",
+        "test:lint": "pint --test",
+        "test:types": "phpstan analyse",
+        "test:unit": "phpunit",
+        "test": [
+            "@clear",
+            "@test:lint",
+            "@test:types",
+            "@test:unit"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Hryha\\RequestLogger\\RequestLoggerServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

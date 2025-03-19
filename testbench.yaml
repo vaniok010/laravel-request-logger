@@ -1,0 +1,18 @@
+laravel: '@testbench'
+
+providers:
+  - Hryha\RequestLogger\RequestLoggerServiceProvider
+
+migrations: true
+seeders: false
+
+workbench:
+  start: '/'
+  install: true
+  welcome: true
+  build:
+    - asset-publish
+    - create-sqlite-db
+    - db-wipe
+    - migrate-fresh
+  assets: []
