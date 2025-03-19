@@ -28,5 +28,4 @@ return [
             'content' => explode(',', env('REQUEST_LOGGER_HIDE_RESPONSE_HEADERS', 'password,token,access_token,refresh_token')),
         ],
     ],
-    'replacer_hidden_fields' => '|^_-|',
 ];
