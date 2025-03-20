@@ -43,7 +43,7 @@ class JsonFormatter implements Formatter
                 'raw' => $request->getContent(),
             ];
 
-            Log::error($e->getMessage());
+            Log::error($e->getMessage(), ['exception' => $e]);
         }
 
         return is_array($content) ? JsonEncoder::encode($content) : $content;
@@ -79,7 +79,7 @@ class JsonFormatter implements Formatter
                 'raw' => $response->getContent(),
             ];
 
-            Log::error($e->getMessage());
+            Log::error($e->getMessage(), ['exception' => $e]);
         }
 
         return is_array($content) ? JsonEncoder::encode($content) : (string)$content;

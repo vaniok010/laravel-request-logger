@@ -76,7 +76,7 @@ final class RequestLogger
             $timezone = new DateTimeZone(Config::string('request-logger.timezone'));
             $loggerStart->setTimezone($timezone);
         } catch (Throwable $e) {
-            Log::error($e->getMessage());
+            Log::error($e->getMessage(), ['exception' => $e]);
         }
 
         return $loggerStart;

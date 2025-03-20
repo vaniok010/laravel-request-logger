@@ -66,7 +66,7 @@ class Database implements Store
             ]);
 
         } catch (Throwable $e) {
-            Log::error($e->getMessage());
+            Log::error($e->getMessage(), ['exception' => $e]);
         }
     }
 
