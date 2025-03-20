@@ -48,7 +48,7 @@ class RequestLog extends Model
             'headers' => 'json',
             'response_headers' => 'json',
             'custom_fields' => 'json',
-            'sent_at' => 'datetime',
+            'sent_at' => 'datetime:Y-m-d H:i:s.u',
         ];
     }
 
