@@ -3,7 +3,7 @@
     <h4>Request Log #{{ this.$route.params.id }}</h4>
   </div>
   <div>
-    <vue-json-pretty :data="log" :showIcon="true"/>
+    <vue-json-pretty :data="log" :showIcon="true" :theme="RequestLogger.theme"/>
   </div>
 </template>
 

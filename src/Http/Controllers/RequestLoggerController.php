@@ -28,8 +28,8 @@ class RequestLoggerController
             'settings' => [
                 'basePath' => '/request-logs',
                 'customFields' => Config::array('request-logger.custom_fields'),
+                'theme' => $darkMode ? 'dark' : 'light',
             ],
-            'theme' => $darkMode ? 'dark' : 'light',
         ]);
     }
 

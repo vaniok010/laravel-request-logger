@@ -46,7 +46,7 @@
           <td>
             <div class="d-flex justify-content-end">
               <router-link :to="{name: 'one', params: {id: log.id}}" target="_blank">
-                <button type="button" class="btn btn-outline-dark btn-sm">View</button>
+                <button type="button" class="btn btn-outline-primary btn-sm">View</button>
               </router-link>
             </div>
           </td>
