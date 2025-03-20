@@ -1,4 +1,9 @@
 # Request Logger for Laravel
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/hryha/laravel-request-logger.svg)](https://packagist.org/packages/hryha/laravel-request-logger)
+[![Total Downloads](https://img.shields.io/packagist/dt/hryha/laravel-request-logger.svg)](https://packagist.org/packages/hryha/laravel-request-logger)
+[![PHP Version](https://img.shields.io/badge/PHP-8.2%2B-blue)](https://www.php.net/)
+[![Laravel Version](https://img.shields.io/badge/Laravel-11%2B-brightgreen)](https://laravel.com/)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
 
 ![Laravel request logger](assets/demo.png)
 
@@ -33,7 +38,7 @@ composer require hryha/laravel-request-logger
 Run the database migrations:
 
 ```php
-    php artisan migrate
+php artisan migrate
 ```
 
 Optionally, publish the package's configuration file:
@@ -85,8 +90,6 @@ Use the `RequestLogger::addCustomField(key, value)` method to include additional
 Additional data can be added from anywhere in the application using this code:
 
 ```php
-<?php
-
 resolve(RequestLogger::class)->addCustomField('user_id', Auth::id());
 ```
 also, to filter logs by this field, you can add this field to the settings
@@ -106,6 +109,17 @@ REQUEST_LOGGER_IGNORE_RESPONSE_STATUSES="[[100, 299], 301, 302]"
 
 This configuration will ignore logs for responses with status codes between `100-299`, as well as `301` and `302`
 responses.
+
+## Panel authorization
+
+Be sure to protect this panel from unauthorized access. We recommend using [Basic Auth](https://github.com/vaniok010/laravel-simple-basic-auth) middleware or something similar.
+To do this, add an auth `middleware` in `request-logger.php`
+
+``` php
+'middleware' => [
+    \Hryha\SimpleBasicAuth\SimpleBasicAuth::class,
+],
+```
 
 ## Testing
 
