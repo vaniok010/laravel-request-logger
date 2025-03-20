@@ -43,24 +43,11 @@
         "larastan/larastan": "^3.2"
     },
     "scripts": {
-        "post-autoload-dump": [
-            "@clear",
-            "@prepare"
-        ],
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
-        "prepare": "@php vendor/bin/testbench package:discover --ansi",
-        "build": "@php vendor/bin/testbench workbench:build --ansi",
-        "serve": [
-            "Composer\\Config::disableProcessTimeout",
-            "@build",
-            "@php vendor/bin/testbench serve --ansi"
-        ],
         "lint": "pint",
         "test:lint": "pint --test",
         "test:types": "phpstan analyse",
         "test:unit": "phpunit",
         "test": [
-            "@clear",
             "@test:lint",
             "@test:types",
             "@test:unit"
