@@ -25,6 +25,7 @@ class RequestLog extends Model
         'method',
         'headers',
         'payload',
+        'files',
         'response_status',
         'response_headers',
         'response',
@@ -46,6 +47,7 @@ class RequestLog extends Model
     {
         return [
             'headers' => 'json',
+            'files' => 'json',
             'response_headers' => 'json',
             'custom_fields' => 'json',
             'sent_at' => 'datetime:Y-m-d H:i:s.u',

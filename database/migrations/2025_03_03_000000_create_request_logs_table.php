@@ -27,6 +27,7 @@ return new class () extends Migration {
             $table->string('method', 20);
             $table->json('headers');
             $table->longText('payload')->nullable();
+            $table->json('files')->nullable();
             $table->unsignedSmallInteger('response_status');
             $table->json('response_headers');
             $table->longText('response')->nullable();

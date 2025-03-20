@@ -13,6 +13,8 @@ interface Formatter
 
     public function formatRequestContent(Request $request): string;
 
+    public function formatFiles(Request $request): ?array;
+
     public function formatResponseHeaders(Response $response): array;
 
     public function formatResponseContent(Response $response): string;

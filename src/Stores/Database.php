@@ -55,6 +55,7 @@ class Database implements Store
                 'method' => $logData->request->getMethod(),
                 'headers' => $this->formatter->formatRequestHeaders($logData->request),
                 'payload' => $this->formatter->formatRequestContent($logData->request),
+                'files' => $this->formatter->formatFiles($logData->request),
                 'response_status' => $logData->response->getStatusCode(),
                 'response_headers' => $this->formatter->formatResponseHeaders($logData->response),
                 'response' => $this->formatter->formatResponseContent($logData->response),

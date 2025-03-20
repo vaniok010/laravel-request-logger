@@ -8,6 +8,7 @@ use Hryha\RequestLogger\Models\RequestLog;
 use Hryha\RequestLogger\Support\Concealer;
 use Hryha\RequestLogger\Support\JsonEncoder;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,6 +47,23 @@ class JsonFormatter implements Formatter
         }
 
         return is_array($content) ? JsonEncoder::encode($content) : $content;
+    }
+
+    public function formatFiles(Request $request): ?array
+    {
+        if (empty($request->allFiles())) {
+            return null;
+        }
+
+        return collect($request->allFiles())->map(fn (UploadedFile $file) => [
+            'originalName' => $file->getClientOriginalName(),
+            'mimeType' => $file->getClientMimeType(),
+            'error' => $file->getError(),
+            'originalPath' => $file->getRealPath(),
+            'hashName' => $file->hashName(),
+            'pathName' => $file->getPath(),
+            'fileName' => $file->getFilename(),
+        ])->values()->toArray();
     }
 
     public function formatResponseContent(Response $response): string
