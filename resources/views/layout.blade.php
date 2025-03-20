@@ -1,5 +1,5 @@
 <!doctype html>
-<html data-bs-theme="{{$theme}}">
+<html data-bs-theme="{{$settings['theme']}}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
