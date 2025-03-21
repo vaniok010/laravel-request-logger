@@ -3,7 +3,14 @@
     <h4>Request Log #{{ this.$route.params.id }}</h4>
   </div>
   <div>
-    <vue-json-pretty :data="log" :showIcon="true" :theme="RequestLogger.theme"/>
+    <vue-json-pretty
+        v-if="log && Object.keys(log).length"
+        :data="log"
+        :deep="1"
+        :showLength="true"
+        :showIcon="true"
+        :theme="RequestLogger.theme"
+    />
   </div>
 </template>
 
