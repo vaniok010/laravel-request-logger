@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Hryha\RequestLogger;
 
-use DateTime;
-use DateTimeZone;
 use Hryha\RequestLogger\Data\LogData;
 use Hryha\RequestLogger\Stores\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
-use RuntimeException;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 
 final class RequestLogger
 {
@@ -41,7 +37,7 @@ final class RequestLogger
         $this->logData = new LogData(
             request: $request,
             response: $response,
-            loggerStart: $this->getLoggerStart(),
+            localDatetime: $this->localDatetime(),
             durationMs: $this->getDuration(),
             memoryUsage: $this->getMemoryUsage(),
             fingerprint: $this->getFingerprint(),
@@ -61,25 +57,10 @@ final class RequestLogger
         return (float)$startTime;
     }
 
-    /**
-     * @throws RuntimeException
-     */
-    private function getLoggerStart(): DateTime
+    private function localDatetime(): Carbon
     {
-        $startTime = $this->getStartTime();
-        $loggerStart = DateTime::createFromFormat('U.u', (string)$startTime);
-        if (!$loggerStart instanceof DateTime) {
-            throw new RuntimeException('Logger start must be a DateTime object');
-        }
-
-        try {
-            $timezone = new DateTimeZone(Config::string('request-logger.timezone'));
-            $loggerStart->setTimezone($timezone);
-        } catch (Throwable $e) {
-            Log::error($e->getMessage(), ['exception' => $e]);
-        }
-
-        return $loggerStart;
+        return Carbon::createFromTimestamp($this->getStartTime())
+            ->setTimezone(Config::string('request-logger.timezone'));
     }
 
     private function getDuration(): float

@@ -32,6 +32,7 @@ class RequestLog extends Model
         'custom_fields',
         'duration',
         'memory',
+        'timezone',
         'sent_at',
     ];
 
@@ -100,7 +101,12 @@ class RequestLog extends Model
                     return $attributes['sent_at'];
                 }
 
+                if (!is_string($attributes['timezone'])) {
+                    return $attributes['sent_at'];
+                }
+
                 return Carbon::parse($attributes['sent_at'])
+                    ->setTimezone($attributes['timezone'])
                     ->format(Config::string('request-logger.date_format'));
             },
         );
@@ -114,7 +120,12 @@ class RequestLog extends Model
                     return $attributes['sent_at'];
                 }
 
+                if (!is_string($attributes['timezone'])) {
+                    return $attributes['sent_at'];
+                }
+
                 return Carbon::parse($attributes['sent_at'])
+                    ->setTimezone($attributes['timezone'])
                     ->format(Config::string('request-logger.time_format'));
             },
         );

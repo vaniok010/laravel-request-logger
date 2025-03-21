@@ -62,7 +62,8 @@ class Database implements Store
                 'custom_fields' => $logData->customFields,
                 'duration' => $logData->durationMs,
                 'memory' => $logData->memoryUsage,
-                'sent_at' => $logData->loggerStart->format('Y-m-d H:i:s.u'),
+                'timezone' => $logData->localDatetime->getTimezone()->getName(),
+                'sent_at' => $logData->localDatetime->utc()->format('Y-m-d H:i:s.u'),
             ]);
 
         } catch (Throwable $e) {

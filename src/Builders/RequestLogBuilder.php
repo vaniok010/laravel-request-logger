@@ -9,6 +9,8 @@ use Hryha\RequestLogger\Models\RequestLog;
 use Hryha\RequestLogger\Models\RequestLogFingerprint;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
 
 /**
  * @template TModelClass of RequestLog
@@ -57,11 +59,17 @@ class RequestLogBuilder extends Builder
         }
 
         if (!empty($filtersData->sentFrom)) {
-            $this->whereDate('sent_at', '>=', $filtersData->sentFrom);
+            $sentFrom = Carbon::parse($filtersData->sentFrom, Config::string('request-logger.timezone'))
+                ->startOfMinute()
+                ->utc();
+            $this->whereDate('sent_at', '>=', $sentFrom->toDateTimeString());
         }
 
         if (!empty($filtersData->sentTo)) {
-            $this->whereDate('sent_at', '<=', $filtersData->sentTo);
+            $sentTo = Carbon::parse($filtersData->sentTo, Config::string('request-logger.timezone'))
+                ->endOfMinute()
+                ->utc();
+            $this->whereDate('sent_at', '<=', $sentTo->toDateTimeString());
         }
 
         if ($filtersData->durationFrom > 0) {

@@ -10,7 +10,6 @@ use Hryha\RequestLogger\Support\JsonEncoder;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -42,8 +41,6 @@ class JsonFormatter implements Formatter
             $content = [
                 'raw' => $request->getContent(),
             ];
-
-            Log::error($e->getMessage(), ['exception' => $e]);
         }
 
         return is_array($content) ? JsonEncoder::encode($content) : $content;
@@ -78,8 +75,6 @@ class JsonFormatter implements Formatter
             $content = [
                 'raw' => $response->getContent(),
             ];
-
-            Log::error($e->getMessage(), ['exception' => $e]);
         }
 
         return is_array($content) ? JsonEncoder::encode($content) : (string)$content;

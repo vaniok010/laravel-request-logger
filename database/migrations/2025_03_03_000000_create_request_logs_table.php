@@ -34,6 +34,7 @@ return new class () extends Migration {
             $table->json('custom_fields')->nullable();
             $table->integer('duration')->unsigned();
             $table->smallInteger('memory')->unsigned();
+            $table->string('timezone', 50);
             $table->timestamp('sent_at', 6)->index();
         });
     }
