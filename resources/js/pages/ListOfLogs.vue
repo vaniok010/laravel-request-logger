@@ -27,7 +27,7 @@
               <b :class="this.cssClassOfMethod(log.method)">{{ log.method }}</b> {{ log.decoded_uri }}
             </div>
             <div>
-              <span class="badge bg-secondary rounded-circle">{{ log.repeating }}</span>
+              <span class="badge bg-secondary rounded-pill">{{ log.repeats }}</span>
               {{ log.fingerprint }}
             </div>
           </td>
