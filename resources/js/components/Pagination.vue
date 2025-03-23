@@ -30,12 +30,21 @@
 export default {
   props: {
     totalPages: Number,
+    startPage: Number,
   },
 
   data() {
     return {
-      currentPage: 1,
+      currentPage: this.startPage,
     };
+  },
+
+  watch: {
+    startPage: function (page) {
+      if (page !== this.currentPage) {
+        this.currentPage = page;
+      }
+    },
   },
 
   computed: {

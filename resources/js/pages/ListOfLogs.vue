@@ -8,7 +8,7 @@
   <div class="card card-body mt-3">
     <h5 class="card-title">Total: {{ total }}</h5>
     <div class="table-responsive">
-      <table id="request-logs" class="table table-sm align-middle">
+      <table id="request-logs" class="table align-middle">
         <thead>
         <tr>
           <th>URI</th>
@@ -53,7 +53,7 @@
         </tr>
         </tbody>
         <tfoot>
-        <Pagination :total-pages="totalPages" @page-changed="updatePage"/>
+        <Pagination :total-pages="totalPages" :start-page="currentPage" @page-changed="updatePage"/>
         </tfoot>
       </table>
     </div>
@@ -109,7 +109,7 @@ export default {
   },
 
   methods: {
-    loadRequestLogs(page = 1) {
+    loadRequestLogs() {
       this.$http.post(RequestLogger.basePath + `/api/list?page=${this.currentPage}`, this.filterData)
           .then(response => {
             this.logs = response.data.data;

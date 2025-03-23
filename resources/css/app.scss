@@ -3,3 +3,12 @@
 body {
   font-family: 'Montserrat', sans-serif;
 }
+
+table#request-logs th {
+  white-space: nowrap;
+}
+
+table#request-logs td.column-uri {
+  word-break: break-all;
+  width: 50%;
+}

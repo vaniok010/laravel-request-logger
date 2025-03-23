@@ -55,7 +55,7 @@ class ListOfLogsFormRequest extends FormRequest
             'excludeFingerprints.*' => [
                 'string',
                 'min:1',
-                'max:20',
+                'max:50',
             ],
             'sentFrom' => [
                 'nullable',
