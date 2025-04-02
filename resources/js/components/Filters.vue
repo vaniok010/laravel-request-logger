@@ -163,6 +163,8 @@
               <option value="duration|asc">Duration (Shortest First)</option>
               <option value="memory|desc">Memory (High to Low)</option>
               <option value="memory|asc">Memory (Low to High)</option>
+              <option value="repeats|desc">Repeats (High to Low)</option>
+              <option value="repeats|asc">Repeats (Low to High)</option>
             </select>
           </div>
         </div>

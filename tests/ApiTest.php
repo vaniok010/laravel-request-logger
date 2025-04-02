@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hryha\RequestLogger\Tests;
 
 use Hryha\RequestLogger\Models\RequestLog;
+use Hryha\RequestLogger\Models\RequestLogFingerprint;
 
 class ApiTest extends TestCase
 {
@@ -116,6 +117,42 @@ class ApiTest extends TestCase
         $secondLog = RequestLog::factory()->createOne(['memory' => 12]);
 
         $this->postJson(route('request-logs.api.list'), ['orderBy' => 'memory', 'orderDir' => 'desc'])
+            ->assertOk()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.0.id', $secondLog->id)
+            ->assertJsonPath('data.1.id', $fistLog->id);
+    }
+
+    public function test_list_can_be_sorted_by_low_to_high_repeats(): void
+    {
+        $firstFingerprint = RequestLogFingerprint::factory()->createOne(['repeats' => 5]);
+        $fistLog = RequestLog::factory()->createOne([
+            'fingerprint_id' => $firstFingerprint->id,
+        ]);
+        $secondFingerprint = RequestLogFingerprint::factory()->createOne(['repeats' => 10]);
+        $secondLog = RequestLog::factory()->createOne([
+            'fingerprint_id' => $secondFingerprint->id,
+        ]);
+
+        $this->postJson(route('request-logs.api.list'), ['orderBy' => 'repeats', 'orderDir' => 'asc'])
+            ->assertOk()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.0.id', $fistLog->id)
+            ->assertJsonPath('data.1.id', $secondLog->id);
+    }
+
+    public function test_list_can_be_sorted_by_high_to_low_repeats(): void
+    {
+        $firstFingerprint = RequestLogFingerprint::factory()->createOne(['repeats' => 5]);
+        $fistLog = RequestLog::factory()->createOne([
+            'fingerprint_id' => $firstFingerprint->id,
+        ]);
+        $secondFingerprint = RequestLogFingerprint::factory()->createOne(['repeats' => 10]);
+        $secondLog = RequestLog::factory()->createOne([
+            'fingerprint_id' => $secondFingerprint->id,
+        ]);
+
+        $this->postJson(route('request-logs.api.list'), ['orderBy' => 'repeats', 'orderDir' => 'desc'])
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJsonPath('data.0.id', $secondLog->id)

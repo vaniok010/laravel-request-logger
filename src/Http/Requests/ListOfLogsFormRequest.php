@@ -97,6 +97,7 @@ class ListOfLogsFormRequest extends FormRequest
                     'response_status',
                     'duration',
                     'memory',
+                    'repeats'
                 ])
             ],
             'orderDir' => [
