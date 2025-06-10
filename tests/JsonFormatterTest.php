@@ -8,8 +8,10 @@ use Hryha\RequestLogger\Formatters\JsonFormatter;
 use Hryha\RequestLogger\Models\RequestLog;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
 
 class JsonFormatterTest extends TestCase
 {
@@ -68,6 +70,56 @@ class JsonFormatterTest extends TestCase
         $formattedContent = $this->formatter->formatRequestContent($request);
 
         $this->assertEquals((array) json_decode($formattedContent), ['raw' => $content]);
+    }
+
+    public function test_request_files_can_be_formatted(): void
+    {
+        $filename = uniqid('test_file').'.txt';
+        $path = sys_get_temp_dir().DIRECTORY_SEPARATOR.$filename;
+        file_put_contents($path, 'Test content');
+
+        $file = new UploadedFile($path, $filename, 'text/plain', null, true);
+
+        $request = Request::create(uri: '/', method: 'POST', files: [$file]);
+        $request->headers->add(['Content-Type' => 'multipart/form-data']);
+
+        $formattedFiles = $this->formatter->formatFiles($request);
+
+        $this->assertSame($formattedFiles[0], [
+            'originalName' => $file->getClientOriginalName(),
+            'mimeType' => $file->getClientMimeType(),
+            'error' => $file->getError(),
+            'originalPath' => $file->getRealPath(),
+            'hashName' => $file->hashName(),
+            'pathName' => $file->getPath(),
+            'fileName' => $file->getFilename(),
+        ]);
+    }
+
+    public function test_request_files_can_be_formatted_after_delete(): void
+    {
+        $filename = uniqid('test_file').'.txt';
+        $path = sys_get_temp_dir().DIRECTORY_SEPARATOR.$filename;
+        file_put_contents($path, 'Test content');
+
+        $file = new UploadedFile($path, $filename, 'text/plain', null, true);
+
+        $request = Request::create(uri: '/', method: 'POST', files: [$file]);
+        $request->headers->add(['Content-Type' => 'multipart/form-data']);
+
+        File::delete($file->getRealPath());
+
+        $formattedFiles = $this->formatter->formatFiles($request);
+
+        $this->assertSame($formattedFiles[0], [
+            'originalName' => $file->getClientOriginalName(),
+            'mimeType' => $file->getClientMimeType(),
+            'error' => $file->getError(),
+            'originalPath' => $file->getRealPath(),
+            'hashName' => null,
+            'pathName' => $file->getPath(),
+            'fileName' => $file->getFilename(),
+        ]);
     }
 
     public function test_response_headers_can_be_formatted(): void

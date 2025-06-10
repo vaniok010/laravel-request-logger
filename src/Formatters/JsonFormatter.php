@@ -57,7 +57,7 @@ class JsonFormatter implements Formatter
             'mimeType' => $file->getClientMimeType(),
             'error' => $file->getError(),
             'originalPath' => $file->getRealPath(),
-            'hashName' => $file->hashName(),
+            'hashName' => rescue(fn () => $file->hashName()),
             'pathName' => $file->getPath(),
             'fileName' => $file->getFilename(),
         ])->values()->toArray();
