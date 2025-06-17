@@ -62,14 +62,14 @@ class RequestLogBuilder extends Builder
             $sentFrom = Carbon::parse($filtersData->sentFrom, Config::string('request-logger.timezone'))
                 ->startOfMinute()
                 ->utc();
-            $this->whereDate('sent_at', '>=', $sentFrom->toDateTimeString());
+            $this->whereDate('sent_at', '>=', $sentFrom);
         }
 
         if (!empty($filtersData->sentTo)) {
             $sentTo = Carbon::parse($filtersData->sentTo, Config::string('request-logger.timezone'))
                 ->endOfMinute()
                 ->utc();
-            $this->whereDate('sent_at', '<=', $sentTo->toDateTimeString());
+            $this->whereDate('sent_at', '<=', $sentTo);
         }
 
         if ($filtersData->durationFrom > 0) {

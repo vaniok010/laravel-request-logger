@@ -262,6 +262,19 @@ class ApiTest extends TestCase
             ->assertJsonPath('data.0.id', $log->id);
     }
 
+    public function test_logs_can_be_filtered_by_sent_range_with_minutes(): void
+    {
+        $log = RequestLog::factory()->createOne(['sent_at' => now()]);
+
+        $this->postJson(route('request-logs.api.list'), [
+            'sentFrom' => now()->subMinute(),
+            'sentTo' => now()->addMinute(),
+        ])
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $log->id);
+    }
+
     public function test_logs_can_be_filtered_by_duration_from(): void
     {
         RequestLog::factory()->createOne(['duration' => 10]);
