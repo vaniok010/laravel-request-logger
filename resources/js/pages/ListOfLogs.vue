@@ -101,6 +101,7 @@ export default {
         durationTo: this.filters.durationTo || null,
         memoryFrom: this.filters.memoryFrom || null,
         memoryTo: this.filters.memoryTo || null,
+        ip: this.filters.ip || null,
         customFields: this.filters.customFields || null,
         orderBy: order.split('|')[0],
         orderDir: order.split('|')[1],

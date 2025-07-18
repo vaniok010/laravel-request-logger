@@ -81,6 +81,10 @@ class ListOfLogsFormRequest extends FormRequest
                 'nullable',
                 'numeric',
             ],
+            'ip' => [
+                'nullable',
+                'ip',
+            ],
             'customFields' => [
                 'nullable',
                 'array',

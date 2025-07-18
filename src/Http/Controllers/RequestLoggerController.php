@@ -52,6 +52,7 @@ class RequestLoggerController
             durationTo: $safeData->integer('durationTo'),
             memoryFrom: $safeData->integer('memoryFrom'),
             memoryTo: $safeData->integer('memoryTo'),
+            ip: $safeData->string('ip')->value(),
             customFields: $safeData->array('customFields'),
         );
 

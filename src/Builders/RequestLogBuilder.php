@@ -88,6 +88,10 @@ class RequestLogBuilder extends Builder
             $this->where('memory', '<=', $filtersData->memoryTo);
         }
 
+        if (!empty($filtersData->ip)) {
+            $this->where('ip', $filtersData->ip);
+        }
+
         if ('sent' === $filtersData->orderBy) {
             $this->orderBy('sent_at', $filtersData->orderDir);
         } else {

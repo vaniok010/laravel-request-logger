@@ -87,6 +87,15 @@
           </div>
         </div>
 
+        <!-- IP -->
+        <div class="form-group row pb-3">
+          <label for="ip" class="col-sm-2 col-form-label">IP</label>
+          <div class="col-sm-10">
+            <input v-model="filters.ip" type="text" class="form-control"
+                   id="ip"/>
+          </div>
+        </div>
+
         <!-- Date Range -->
         <div class="form-group row pb-3">
           <label class="col-sm-2 col-form-label">Sent</label>
@@ -211,6 +220,7 @@ export default {
         durationTo: null,
         memoryFrom: null,
         memoryTo: null,
+        ip: null,
         customFields: {},
         order: "sent|desc",
       },

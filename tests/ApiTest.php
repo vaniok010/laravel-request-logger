@@ -341,6 +341,17 @@ class ApiTest extends TestCase
             ->assertJsonPath('data.0.id', $log->id);
     }
 
+    public function test_logs_can_be_filtered_by_ip(): void
+    {
+        RequestLog::factory()->createOne();
+        $log = RequestLog::factory()->createOne();
+
+        $this->postJson(route('request-logs.api.list'), ['ip' => $log->ip])
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $log->id);
+    }
+
     public function test_logs_can_be_filtered_by_custom_fields(): void
     {
         RequestLog::factory()->createOne();

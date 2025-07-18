@@ -21,6 +21,7 @@ final class FiltersData
         public ?int $durationTo = null,
         public ?int $memoryFrom = null,
         public ?int $memoryTo = null,
+        public ?string $ip = null,
         public ?array $customFields = null,
     ) {
     }
