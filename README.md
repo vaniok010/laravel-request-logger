@@ -29,27 +29,28 @@ You can view your logs through a dedicated panel at `https://your.domain/request
 
 ## Installation
 
-Install the package via Composer::
+Install the package via Composer:
 
 ```bash
 composer require hryha/laravel-request-logger
 ```
 
-Run the database migrations:
+After installing Request Logger, publish its assets and config using the `request-logs:install` Artisan command:
+
+```php
+php artisan request-logs:install
+```
+View the complete configuration options: [here](config/request-logger.php).
+
+After installing Request Logger, you should also run the `migrate` command in order to create the tables needed to store Request Logger's data:
 
 ```php
 php artisan migrate
 ```
 
-Optionally, publish the package's configuration file:
+## Usage
 
-```bash
-php artisan vendor:publish --provider="Hryha\RequestLogger\RequestLoggerServiceProvider" 
-```
-
-View the complete configuration options: [here](config/request-logger.php).
-
-The package provides middleware that can be registered either globally or on specific routes.
+The package provides middleware that can be registered either globally or on specific routes:
 
 ```php
 // In bootstrap/app.php for global middleware
@@ -66,12 +67,22 @@ return Application::configure(basePath: dirname(__DIR__))
 Route::get('/user', [UserController::class, 'index'])->middleware(\Hryha\RequestLogger\Http\Middleware\RequestLogger::class);
 ```
 
+## Upgrading
+
+After upgrading to any new Request Logger version, you should re-publish Request Logger's assets:
+
+```php
+php artisan request-logs:publish
+```
+
 ## Data Pruning
 
 To prevent the `request_logs` table from growing too large, schedule the `request-logs:clear` command to run daily:
 
 ```php
-$schedule->command('request-logs:clear')->daily();
+use Illuminate\Support\Facades\Schedule;
+
+Schedule::command('request-logs:clear')->daily();
 ```
 
 The `request-logs:clear` command removes logs older than the number of days specified in your `log_keep_days`
@@ -90,6 +101,8 @@ Use the `RequestLogger::addCustomField(key, value)` method to include additional
 Additional data can be added from anywhere in the application using this code:
 
 ```php
+use Hryha\RequestLogger\RequestLogger;
+
 resolve(RequestLogger::class)->addCustomField('user_id', Auth::id());
 ```
 also, to filter logs by this field, you can add this field to the settings
@@ -113,7 +126,7 @@ responses.
 ## Panel authorization
 
 Be sure to protect this panel from unauthorized access. We recommend using [Basic Auth](https://github.com/vaniok010/laravel-simple-basic-auth) middleware or something similar.
-To do this, add an auth `middleware` in `request-logger.php`
+To do this, add an auth `middleware` in `config/request-logger.php`
 
 ``` php
 'middleware' => [

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Hryha\RequestLogger;
 
 use Hryha\RequestLogger\Console\Commands\ClearRequestLogs;
+use Hryha\RequestLogger\Console\Commands\InstallCommand;
+use Hryha\RequestLogger\Console\Commands\PublishCommand;
 use Hryha\RequestLogger\Formatters\Formatter;
 use Hryha\RequestLogger\Stores\Store;
 use Illuminate\Support\Facades\Config;
@@ -58,6 +60,8 @@ class RequestLoggerServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
+                InstallCommand::class,
+                PublishCommand::class,
                 ClearRequestLogs::class,
             ]);
         }
@@ -68,11 +72,11 @@ class RequestLoggerServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../config/request-logger.php' => config_path('request-logger.php'),
-            ], 'config');
+            ], 'request-logger-config');
 
             $this->publishes([
                 __DIR__.'/../public' => public_path('vendor/request-logger'),
-            ], 'public');
+            ], 'request-logger-assets');
         }
     }
 }
