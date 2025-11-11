@@ -25,7 +25,24 @@ class Database implements Store
 
     public function list(FiltersData $filtersData): LengthAwarePaginator
     {
+        $logsTable = (new RequestLog())->getTable();
+        $fingerprintsTable = (new RequestLogFingerprint())->getTable();
+
         return RequestLog::query()
+            ->select([
+                "$logsTable.id",
+                "$logsTable.fingerprint_id",
+                "$logsTable.ip",
+                "$logsTable.uri",
+                "$logsTable.method",
+                "$logsTable.response_status",
+                "$logsTable.duration",
+                "$logsTable.memory",
+                "$logsTable.timezone",
+                "$logsTable.sent_at",
+                "$fingerprintsTable.fingerprint",
+                "$fingerprintsTable.repeats",
+            ])
             ->joinFingerprint()
             ->applyFilters($filtersData)
             ->paginate(Config::integer('request-logger.logs_per_page'));

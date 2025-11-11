@@ -106,17 +106,11 @@ class RequestLogBuilder extends Builder
         $logsTable = (new RequestLog())->getTable();
         $fingerprintsTable = (new RequestLogFingerprint())->getTable();
 
-        return $this
-            ->select([
-                "$logsTable.*",
-                "$fingerprintsTable.fingerprint",
-                "$fingerprintsTable.repeats",
-            ])
-            ->join(
-                table: $fingerprintsTable,
-                first: "$fingerprintsTable.id",
-                operator: '=',
-                second: "$logsTable.fingerprint_id"
-            );
+        return $this->join(
+            table: $fingerprintsTable,
+            first: "$fingerprintsTable.id",
+            operator: '=',
+            second: "$logsTable.fingerprint_id"
+        );
     }
 }
