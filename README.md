@@ -16,10 +16,12 @@ You can view your logs through a dedicated panel at `https://your.domain/request
 
 - HTTP request and response logging
 - Web-based log viewer interface
-- Duplicated requests
+- Duplicated requests detection
 - Configurable data retention period
 - Sensitive data masking
 - Support for custom logging fields
+- Sampling support - log only a percentage of requests
+- Smart filtering - always log slow requests and requests with high memory usage
 
 ## Requirements
 
@@ -111,17 +113,58 @@ also, to filter logs by this field, you can add this field to the settings
 REQUEST_LOGGER_CUSTOM_FIELDS="user_id,other_field"
 ```
 
-## Ignoring Responses by Status Code
+## Sampling Configuration
 
-Configure status codes to ignore by setting `REQUEST_LOGGER_IGNORE_RESPONSE_STATUSES` in your `.env` file.
-The setting accepts both status ranges and specific status codes:
+To reduce storage usage and improve performance on high-traffic applications, you can configure Request Logger to log only a percentage of requests.
+
+### Basic Sampling
+
+Enable sampling in your `.env` file:
 
 ```dotenv
-REQUEST_LOGGER_IGNORE_RESPONSE_STATUSES="[[100, 299], 301, 302]"
+# Enable sampling
+REQUEST_LOGGER_SAMPLING_ENABLED=true
+# Log only 0.5% of successful requests (2xx)
+REQUEST_LOGGER_SAMPLING_2XX=0.5
+# Log 50% of redirects (3xx)
+REQUEST_LOGGER_SAMPLING_3XX=50
+# Log all client errors (4xx)
+REQUEST_LOGGER_SAMPLING_4XX=100
+# Log all server errors (5xx)
+REQUEST_LOGGER_SAMPLING_5XX=100
 ```
 
-This configuration will ignore logs for responses with status codes between `100-299`, as well as `301` and `302`
-responses.
+**Note**: Sampling rates support up to 2 decimal places (e.g., 10.25%). Values with more precision are automatically rounded.
+
+### Smart Filtering
+
+Always log critical requests regardless of sampling rate:
+
+```dotenv
+# Always log requests slower than 500ms
+REQUEST_LOGGER_ALWAYS_LOG_SLOW=500
+# Always log requests using more than 30MB memory
+REQUEST_LOGGER_ALWAYS_LOG_HEAVY_MEMORY=30
+```
+
+### How Sampling Works
+
+When sampling is enabled:
+
+1. **Ignored paths** are checked first (never logged)
+2. **Smart filters** are applied (slow requests, high memory usage)
+3. If no smart filter matches, **sampling rate** is applied randomly
+4. A value of `0` means never log, `100` means always log
+
+## Ignoring Paths
+
+Configure paths to ignore by setting `REQUEST_LOGGER_IGNORE_PATHS` in your `.env` file:
+
+```dotenv
+REQUEST_LOGGER_IGNORE_PATHS="telescope*,horizon*,nova-api*"
+```
+
+These paths will never be logged, regardless of sampling configuration.
 
 ## Panel authorization
 

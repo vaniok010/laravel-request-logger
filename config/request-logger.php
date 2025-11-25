@@ -16,7 +16,6 @@ return [
     'table_name' => 'request_logs',
     'custom_fields' => explode(',', env('REQUEST_LOGGER_CUSTOM_FIELDS', '')),
     'ignore_paths' => explode(',', env('REQUEST_LOGGER_IGNORE_PATHS', 'request-logs*,telescope*,horizon*,nova-api*')),
-    'ignore_response_statuses' => json_decode(env('REQUEST_LOGGER_IGNORE_RESPONSE_STATUSES', '[]')),
     'hide' => [
         'mask' => env('REQUEST_LOGGER_HIDE_MASK', '|^_-|'),
         'request' => [
@@ -27,5 +26,16 @@ return [
             'headers' => explode(',', env('REQUEST_LOGGER_HIDE_RESPONSE_HEADERS', 'set-cookie,www-authenticate,server,x-powered-by,via,referrer-policy,access-control-allow-origin')),
             'content' => explode(',', env('REQUEST_LOGGER_HIDE_RESPONSE_HEADERS', 'password,token,access_token,refresh_token')),
         ],
+    ],
+    'sampling' => [
+        'enabled' => env('REQUEST_LOGGER_SAMPLING_ENABLED', false),
+        'rates' => [
+            '2xx' => round((float)env('REQUEST_LOGGER_SAMPLING_2XX', 100.0), 2),
+            '3xx' => round((float)env('REQUEST_LOGGER_SAMPLING_3XX', 100.0), 2),
+            '4xx' => round((float)env('REQUEST_LOGGER_SAMPLING_4XX', 100.0), 2),
+            '5xx' => round((float)env('REQUEST_LOGGER_SAMPLING_5XX', 100.0), 2),
+        ],
+        'always_log_slow_requests' => (int)env('REQUEST_LOGGER_ALWAYS_LOG_SLOW', 0),
+        'always_log_heavy_memory' => (int)env('REQUEST_LOGGER_ALWAYS_LOG_HEAVY_MEMORY', 0),
     ],
 ];

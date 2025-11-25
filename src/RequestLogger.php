@@ -28,18 +28,29 @@ final class RequestLogger
 
     public function save(Request $request, Response $response): void
     {
-        if (!Config::boolean('request-logger.enabled') || $this->shouldIgnore($request, $response)) {
+        if (!Config::boolean('request-logger.enabled')) {
             return;
         }
 
         $this->request = $request;
+        $duration = $this->getDuration();
+        $memory = $this->getMemoryUsage();
+        $statusCode = $response->getStatusCode();
+
+        if ($this->shouldIgnorePath($request)) {
+            return;
+        }
+
+        if (!$this->shouldLog($statusCode, $duration, $memory)) {
+            return;
+        }
 
         $this->logData = new LogData(
             request: $request,
             response: $response,
             localDatetime: $this->localDatetime(),
-            durationMs: $this->getDuration(),
-            memoryUsage: $this->getMemoryUsage(),
+            durationMs: $duration,
+            memoryUsage: $memory,
             fingerprint: $this->getFingerprint(),
             customFields: $this->getCustomFields()
         );
@@ -84,15 +95,6 @@ final class RequestLogger
         ]));
     }
 
-    private function shouldIgnore(Request $request, Response $response): bool
-    {
-        if ($this->shouldIgnorePath($request)) {
-            return true;
-        }
-
-        return $this->shouldIgnoreResponseStatus($response);
-    }
-
     private function shouldIgnorePath(Request $request): bool
     {
         $ignorePaths = Config::array('request-logger.ignore_paths', []);
@@ -107,21 +109,35 @@ final class RequestLogger
         return false;
     }
 
-    private function shouldIgnoreResponseStatus(Response $response): bool
+    private function shouldLog(int $statusCode, float $durationMs, float $memoryMb): bool
     {
-        $ignoreStatuses = Config::array('request-logger.ignore_response_statuses', []);
-        foreach ($ignoreStatuses as $ignoreStatus) {
-            if ($response->getStatusCode() === $ignoreStatus) {
-                return true;
-            }
-            if (is_array($ignoreStatus) && 2 === count($ignoreStatus)) {
-                if ($response->getStatusCode() >= $ignoreStatus[0] && $response->getStatusCode() <= $ignoreStatus[1]) {
-                    return true;
-                }
-            }
+        if (!Config::boolean('request-logger.sampling.enabled')) {
+            return true;
         }
 
-        return false;
+        $slowThreshold = Config::integer('request-logger.sampling.always_log_slow_requests');
+        if ($slowThreshold > 0 && $durationMs >= $slowThreshold) {
+            return true;
+        }
+
+        $memoryThreshold = Config::integer('request-logger.sampling.always_log_heavy_memory');
+        if ($memoryThreshold > 0 && $memoryMb >= $memoryThreshold) {
+            return true;
+        }
+
+        $samplingRates = Config::array('request-logger.sampling.rates', []);
+        $statusGroup = mb_substr((string)$statusCode, 0, 1).'xx';
+        $samplingRate = $samplingRates[$statusGroup] ?? 100.0;
+
+        if ($samplingRate >= 100.0) {
+            return true;
+        }
+
+        if ($samplingRate <= 0) {
+            return false;
+        }
+
+        return (mt_rand() / mt_getrandmax()) < ($samplingRate / 100.0);
     }
 
     private function getCustomFields(): array

@@ -48,17 +48,4 @@ class RequestLoggerTest extends TestCase
 
         $this->assertDatabaseEmpty(RequestLog::class);
     }
-
-    public function test_if_response_status_is_ignored_logs_would_not_save(): void
-    {
-        $request = Request::create(uri: '/');
-        $response = new Response(status: 301);
-
-        Config::set('request-logger.ignore_response_statuses', [301]);
-
-        $requestLogger = $this->app->make(RequestLogger::class);
-        $requestLogger->save($request, $response);
-
-        $this->assertDatabaseEmpty(RequestLog::class);
-    }
 }
