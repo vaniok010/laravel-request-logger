@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 use Throwable;
 
 class Database implements Store
@@ -64,11 +65,23 @@ class Database implements Store
 
             $fingerprint = RequestLogFingerprint::query()->where('fingerprint', $logData->fingerprint)->firstOrFail();
 
+            $uri = Str::of($logData->request->getRequestUri())
+                ->substr(0, 250)
+                ->when(
+                    fn (Stringable $s) => $s->match('/%$/')->isNotEmpty(),
+                    fn (Stringable $s) => $s->substr(0, -1)->append('...')
+                )
+                ->when(
+                    fn (Stringable $s) => $s->match('/%[0-9A-Fa-f]$/')->isNotEmpty(),
+                    fn (Stringable $s) => $s->substr(0, -2)->append('...')
+                )
+                ->toString();
+
             RequestLog::query()->create([
                 'fingerprint_id' => $fingerprint->id,
                 'ip' => $logData->request->getClientIp(),
                 'host' => Str::limit($logData->request->getHost(), 250),
-                'uri' => Str::limit($logData->request->getRequestUri(), 250),
+                'uri' => $uri,
                 'method' => $logData->request->getMethod(),
                 'headers' => $this->formatter->formatRequestHeaders($logData->request),
                 'payload' => $this->formatter->formatRequestContent($logData->request),

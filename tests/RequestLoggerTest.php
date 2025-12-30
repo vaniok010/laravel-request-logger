@@ -9,6 +9,7 @@ use Hryha\RequestLogger\RequestLogger;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 
 class RequestLoggerTest extends TestCase
 {
@@ -47,5 +48,21 @@ class RequestLoggerTest extends TestCase
         $requestLogger->save($request, $response);
 
         $this->assertDatabaseEmpty(RequestLog::class);
+    }
+
+    public function test_it_saves_truncated_uri_when_uri_exceeds_limit(): void
+    {
+        $uri = Str::random(249);
+        $firstRequest = Request::create(uri: "$uri%");
+        $secondRequest = Request::create(uri: "$uri%A");
+        $response = new Response();
+
+        $requestLogger = $this->app->make(RequestLogger::class);
+        $requestLogger->save($firstRequest, $response);
+        $requestLogger->save($secondRequest, $response);
+
+        $this->assertDatabaseCount(RequestLog::class, 2);
+        $requestLogs = RequestLog::query()->where('uri', "$uri...")->count();
+        $this->assertEquals(2, $requestLogs);
     }
 }
