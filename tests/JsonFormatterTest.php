@@ -175,11 +175,11 @@ class JsonFormatterTest extends TestCase
             'response' => json_encode([
                 'name' => 'test',
             ]),
-        ]);
+        ])->toArray();
 
         $preparedLog = $this->formatter->prepareLog($log);
 
-        $this->assertSame($preparedLog->payload, ['id' => 1]);
-        $this->assertSame($preparedLog->response, ['name' => 'test']);
+        $this->assertSame($preparedLog['payload'], ['id' => 1]);
+        $this->assertSame($preparedLog['response'], ['name' => 'test']);
     }
 }

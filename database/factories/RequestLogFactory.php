@@ -28,7 +28,6 @@ class RequestLogFactory extends Factory
             'custom_fields' => [['custom_field' => 'custom_value']],
             'duration' => rand(1, 1000),
             'memory' => rand(1, 1000),
-            'timezone' => $this->faker->timezone(),
             'sent_at' => $this->faker->dateTime(),
         ];
     }

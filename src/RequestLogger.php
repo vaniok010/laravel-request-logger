@@ -48,7 +48,7 @@ final class RequestLogger
         $this->logData = new LogData(
             request: $request,
             response: $response,
-            localDatetime: $this->localDatetime(),
+            sentAt: $this->sentAt(),
             durationMs: $duration,
             memoryUsage: $memory,
             fingerprint: $this->getFingerprint(),
@@ -68,10 +68,9 @@ final class RequestLogger
         return (float)$startTime;
     }
 
-    private function localDatetime(): Carbon
+    private function sentAt(): Carbon
     {
-        return Carbon::createFromTimestamp($this->getStartTime())
-            ->setTimezone(Config::string('request-logger.timezone'));
+        return Carbon::createFromTimestamp($this->getStartTime());
     }
 
     private function getDuration(): float

@@ -12,7 +12,7 @@ interface Store
 {
     public function list(FiltersData $filtersData): LengthAwarePaginator;
 
-    public function one(int $id): mixed;
+    public function one(int $id): array;
 
     public function create(LogData $logData): void;
 

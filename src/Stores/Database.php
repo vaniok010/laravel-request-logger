@@ -10,6 +10,7 @@ use Hryha\RequestLogger\Formatters\Formatter;
 use Hryha\RequestLogger\Models\RequestLog;
 use Hryha\RequestLogger\Models\RequestLogFingerprint;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -39,7 +40,6 @@ class Database implements Store
                 "$logsTable.response_status",
                 "$logsTable.duration",
                 "$logsTable.memory",
-                "$logsTable.timezone",
                 "$logsTable.sent_at",
                 "$fingerprintsTable.fingerprint",
                 "$fingerprintsTable.repeats",
@@ -49,9 +49,10 @@ class Database implements Store
             ->paginate(Config::integer('request-logger.logs_per_page'));
     }
 
-    public function one(int $id): RequestLog
+    public function one(int $id): array
     {
-        return RequestLog::query()->findOrFail($id);
+        $log = RequestLog::query()->findOrFail($id)->toArray();
+        return Arr::except($log, 'sent_at');
     }
 
     public function create(LogData $logData): void
@@ -92,8 +93,7 @@ class Database implements Store
                 'custom_fields' => $logData->customFields,
                 'duration' => $logData->durationMs,
                 'memory' => $logData->memoryUsage,
-                'timezone' => $logData->localDatetime->getTimezone()->getName(),
-                'sent_at' => $logData->localDatetime->utc()->format('Y-m-d H:i:s.u'),
+                'sent_at' => $logData->sentAt->format('Y-m-d H:i:s.u'),
             ]);
 
         } catch (Throwable $e) {

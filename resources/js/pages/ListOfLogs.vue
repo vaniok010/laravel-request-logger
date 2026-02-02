@@ -40,8 +40,8 @@
           <td class="column-memory">{{ log.memory }} MB</td>
           <td>{{ log.ip }}</td>
           <td>
-            <div>{{ log.formatted_time }}</div>
-            <div>{{ log.formatted_date }}</div>
+            <div>{{ log.sent_at_time }}</div>
+            <div>{{ log.sent_at_date }}</div>
           </td>
           <td>
             <div class="d-flex justify-content-end">

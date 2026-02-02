@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\Schema;
 return new class () extends Migration {
     public function up(): void
     {
-        if (!Schema::hasTable('request_logs')) {
+        if (!Schema::hasTable(config('request-logger.table_name'))) {
             return;
         }
 
         $length = DB::table('information_schema.COLUMNS')
             ->where('TABLE_SCHEMA', DB::raw('DATABASE()'))
-            ->where('TABLE_NAME', 'request_logs')
+            ->where('TABLE_NAME', config('request-logger.table_name'))
             ->where('COLUMN_NAME', 'ip')
             ->value('CHARACTER_MAXIMUM_LENGTH');
 
@@ -23,7 +23,7 @@ return new class () extends Migration {
             return;
         }
 
-        DB::statement('ALTER TABLE `request_logs` MODIFY `ip` VARCHAR(50) NOT NULL');
+        DB::statement('ALTER TABLE `'.config('request-logger.table_name').'` MODIFY `ip` VARCHAR(50) NOT NULL');
     }
 
     public function down(): void
@@ -32,6 +32,6 @@ return new class () extends Migration {
             return;
         }
 
-        DB::statement('ALTER TABLE `request_logs` MODIFY `ip` VARCHAR(20) NOT NULL');
+        DB::statement('ALTER TABLE `'.config('request-logger.table_name').'` MODIFY `ip` VARCHAR(20) NOT NULL');
     }
 };

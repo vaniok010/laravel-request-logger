@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Hryha\RequestLogger\Formatters;
 
-use Hryha\RequestLogger\Models\RequestLog;
 use Hryha\RequestLogger\Support\Concealer;
 use Hryha\RequestLogger\Support\JsonEncoder;
 use Illuminate\Http\Request;
@@ -90,15 +89,14 @@ class JsonFormatter implements Formatter
         return $this->concealer->hide($headers, Config::array('request-logger.hide.response.headers'));
     }
 
-    /** @param RequestLog $log */
-    public function prepareLog(mixed $log): mixed
+    public function prepareLog(array $log): array
     {
-        if (!empty($log->payload)) {
-            $log->payload = JsonEncoder::decode($log->payload);
+        if (!empty($log['payload'])) {
+            $log['payload'] = JsonEncoder::decode($log['payload']);
         }
 
-        if (!empty($log->response)) {
-            $log->response = JsonEncoder::decode($log->response);
+        if (!empty($log['response'])) {
+            $log['response'] = JsonEncoder::decode($log['response']);
         }
 
         return $log;

@@ -19,5 +19,5 @@ interface Formatter
 
     public function formatResponseContent(Response $response): string;
 
-    public function prepareLog(mixed $log): mixed;
+    public function prepareLog(array $log): array;
 }

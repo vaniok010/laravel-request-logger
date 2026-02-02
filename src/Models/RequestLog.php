@@ -32,14 +32,13 @@ class RequestLog extends Model
         'custom_fields',
         'duration',
         'memory',
-        'timezone',
         'sent_at',
     ];
 
     protected $appends = [
         'decoded_uri',
-        'formatted_date',
-        'formatted_time',
+        'sent_at_time',
+        'sent_at_date',
     ];
 
     public $timestamps = false;
@@ -51,7 +50,6 @@ class RequestLog extends Model
             'files' => 'json',
             'response_headers' => 'json',
             'custom_fields' => 'json',
-            'sent_at' => 'datetime:Y-m-d H:i:s.u',
         ];
     }
 
@@ -93,7 +91,7 @@ class RequestLog extends Model
         );
     }
 
-    protected function formattedDate(): Attribute
+    protected function sentAtDate(): Attribute
     {
         return Attribute::make(
             get: function (mixed $value, array $attributes) {
@@ -101,18 +99,14 @@ class RequestLog extends Model
                     return $attributes['sent_at'];
                 }
 
-                if (!is_string($attributes['timezone'])) {
-                    return $attributes['sent_at'];
-                }
-
-                return Carbon::parse($attributes['sent_at'])
-                    ->setTimezone($attributes['timezone'])
+                return Carbon::parse($attributes['sent_at'], 'UTC')
+                    ->setTimezone(Config::string('request-logger.timezone'))
                     ->format(Config::string('request-logger.date_format'));
             },
         );
     }
 
-    protected function formattedTime(): Attribute
+    protected function sentAtTime(): Attribute
     {
         return Attribute::make(
             get: function (mixed $value, array $attributes) {
@@ -120,13 +114,23 @@ class RequestLog extends Model
                     return $attributes['sent_at'];
                 }
 
-                if (!is_string($attributes['timezone'])) {
-                    return $attributes['sent_at'];
+                return Carbon::parse($attributes['sent_at'], 'UTC')
+                    ->setTimezone(Config::string('request-logger.timezone'))
+                    ->format(Config::string('request-logger.time_format'));
+            },
+        );
+    }
+
+    protected function sentAt(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value) {
+                if (!is_string($value) && !$value instanceof Carbon) {
+                    return $value;
                 }
 
-                return Carbon::parse($attributes['sent_at'])
-                    ->setTimezone($attributes['timezone'])
-                    ->format(Config::string('request-logger.time_format'));
+                return Carbon::parse($value, 'UTC')
+                    ->setTimezone(Config::string('request-logger.timezone'));
             },
         );
     }

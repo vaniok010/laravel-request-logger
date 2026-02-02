@@ -13,7 +13,7 @@ final class LogData
     public function __construct(
         public Request $request,
         public Response $response,
-        public Carbon $localDatetime,
+        public Carbon $sentAt,
         public int|float $durationMs,
         public float $memoryUsage,
         public string $fingerprint,
