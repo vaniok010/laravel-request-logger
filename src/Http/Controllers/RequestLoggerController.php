@@ -44,6 +44,7 @@ class RequestLoggerController
             excludeUris: $safeData->array('excludeUris'),
             methods: $safeData->array('methods'),
             responseStatus: $safeData->integer('responseStatus'),
+            excludeResponseStatuses: $safeData->array('excludeResponseStatuses'),
             fingerprint: $safeData->string('fingerprint')->value(),
             excludeFingerprints: $safeData->array('excludeFingerprints'),
             sentFrom: $safeData->string('sentFrom')->value(),

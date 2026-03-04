@@ -55,6 +55,22 @@
           </div>
         </div>
 
+        <!-- Exclude Response Statuses -->
+        <div class="form-group row pb-3">
+          <label class="col-sm-2 col-form-label">Exclude Response Statuses</label>
+          <div class="col-sm-10">
+              <div v-for="(status, index) in filters.excludeResponseStatuses" :key="index" class="d-flex gap-1 pb-1">
+                  <input v-model="filters.excludeResponseStatuses[index]" type="number" class="form-control"/>
+                  <button v-if="index === 0" type="button" class="btn btn-outline-success" @click="addExcludeResponseStatus">
+                      +
+                  </button>
+                  <button v-else type="button" class="btn btn-outline-danger" @click="removeExcludeResponseStatus(index)">
+                      ×
+                  </button>
+              </div>
+          </div>
+        </div>
+
         <!-- Custom fields -->
         <div v-for="field in RequestLogger.customFields" class="form-group row pb-3">
           <label :for="'custom_' + field" class="col-sm-2 col-form-label">{{ jsConvert.toHeaderCase(field) }}</label>
@@ -212,6 +228,7 @@ export default {
         excludeUris: [""],
         methods: [],
         responseStatus: null,
+        excludeResponseStatuses: [""],
         fingerprint: null,
         excludeFingerprints: [""],
         sentFrom: null,
@@ -239,6 +256,12 @@ export default {
     },
     removeExcludeFingerprint(index) {
       this.filters.excludeFingerprints.splice(index, 1);
+    },
+    addExcludeResponseStatus() {
+      this.filters.excludeResponseStatuses.push("");
+    },
+    removeExcludeResponseStatus(index) {
+      this.filters.excludeResponseStatuses.splice(index, 1);
     },
     applyFilters() {
       this.showFilters = false;

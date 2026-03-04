@@ -24,7 +24,7 @@ return [
         ],
         'response' => [
             'headers' => explode(',', env('REQUEST_LOGGER_HIDE_RESPONSE_HEADERS', 'set-cookie,www-authenticate,server,x-powered-by,via,referrer-policy,access-control-allow-origin')),
-            'content' => explode(',', env('REQUEST_LOGGER_HIDE_RESPONSE_HEADERS', 'password,token,access_token,refresh_token')),
+            'content' => explode(',', env('REQUEST_LOGGER_HIDE_RESPONSE_CONTENT', 'password,token,access_token,refresh_token')),
         ],
     ],
     'sampling' => [

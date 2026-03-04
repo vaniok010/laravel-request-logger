@@ -42,6 +42,15 @@ class ListOfLogsFormRequest extends FormRequest
                 'min:0',
                 'max:1000',
             ],
+            'excludeResponseStatuses' => [
+                'nullable',
+                'array',
+            ],
+            'excludeResponseStatuses.*' => [
+                'numeric',
+                'min:0',
+                'max:1000',
+            ],
             'fingerprint' => [
                 'nullable',
                 'string',

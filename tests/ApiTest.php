@@ -203,6 +203,17 @@ class ApiTest extends TestCase
             ->assertJsonPath('data.0.id', $log->id);
     }
 
+    public function test_logs_can_be_excluded_by_response_statuses(): void
+    {
+        $log = RequestLog::factory()->createOne(['response_status' => 200]);
+        $excludedLog = RequestLog::factory()->createOne(['response_status' => 404]);
+
+        $this->postJson(route('request-logs.api.list'), ['excludeResponseStatuses' => [$excludedLog->response_status]])
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $log->id);
+    }
+
     public function test_logs_can_be_filtered_by_fingerprint(): void
     {
         RequestLog::factory()->createOne();

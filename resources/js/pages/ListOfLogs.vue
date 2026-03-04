@@ -96,6 +96,7 @@ export default {
         fingerprint: this.filters.fingerprint || null,
         methods: (this.filters.methods || []).filter(String),
         responseStatus: this.filters.responseStatus || null,
+        excludeResponseStatuses: (this.filters.excludeResponseStatuses || []).filter(Number),
         uri: this.filters.uri || null,
         durationFrom: this.filters.durationFrom || null,
         durationTo: this.filters.durationTo || null,

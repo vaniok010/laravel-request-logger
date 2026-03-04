@@ -13,6 +13,7 @@ final class FiltersData
         public ?array $excludeUris = null,
         public ?array $methods = null,
         public ?int $responseStatus = null,
+        public ?array $excludeResponseStatuses = null,
         public ?string $fingerprint = null,
         public ?array $excludeFingerprints = null,
         public ?string $sentFrom = null,

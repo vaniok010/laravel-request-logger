@@ -44,6 +44,10 @@ class RequestLogBuilder extends Builder
             $this->where('response_status', $filtersData->responseStatus);
         }
 
+        if (!empty($filtersData->excludeResponseStatuses)) {
+            $this->whereNotIn('response_status', $filtersData->excludeResponseStatuses);
+        }
+
         if (!empty($filtersData->fingerprint)) {
             $this->where('fingerprint', $filtersData->fingerprint);
         }
