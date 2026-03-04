@@ -1,7 +1,7 @@
 import axios from 'axios';
 import 'bootstrap';
-import { createApp } from 'vue/dist/vue.esm-bundler.js';
-import { createRouter, createWebHistory } from 'vue-router';
+import {createApp} from 'vue/dist/vue.esm-bundler.js';
+import {createRouter, createWebHistory} from 'vue-router';
 import Base from './base';
 import Routes from './routes';
 
