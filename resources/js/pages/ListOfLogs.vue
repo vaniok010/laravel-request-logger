@@ -4,7 +4,7 @@
         <h4>Request Logs</h4>
     </div>
     <div>
-        <Filters @filter-changed="updateFilters"/>
+        <Filters :loading="isLoading" @filter-changed="updateFilters"/>
     </div>
     <div class="card card-body mt-3">
         <h5 class="card-title">Total: {{ total }}</h5>
@@ -78,6 +78,8 @@ export default {
             logs: [],
             currentPage: 1,
             totalPages: 1,
+            isLoading: false,
+            loadingTimer: null,
         };
     },
 
@@ -113,11 +115,23 @@ export default {
 
     methods: {
         loadRequestLogs() {
+            this.isLoading = false;
+            clearTimeout(this.loadingTimer);
+
+            this.loadingTimer = setTimeout(() => {
+                this.isLoading = true;
+            }, 500);
+
             this.$http.post(RequestLogger.basePath + `/api/list?page=${this.currentPage}`, this.filterData)
                 .then(response => {
                     this.logs = response.data.data;
                     this.totalPages = response.data.last_page;
                     this.total = response.data.total;
+                })
+                .finally(() => {
+                    clearTimeout(this.loadingTimer);
+                    this.loadingTimer = null;
+                    this.isLoading = false;
                 });
         },
 

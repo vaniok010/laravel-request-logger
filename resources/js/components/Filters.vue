@@ -1,7 +1,10 @@
 <template>
     <div class="row">
         <div class="col-6">
-            <a @click="showFilters = !showFilters" class="btn btn-outline-primary float-start">Filters & Sorting</a>
+            <a @click="showFilters = !showFilters" class="btn btn-outline-primary float-start">
+                <span v-if="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                Filters & Sorting
+            </a>
         </div>
         <div class="col-6">
             <ClearLogs/>
@@ -261,6 +264,12 @@ import ClearLogs from "./ClearLogs.vue";
 import jsConvert from "js-convert-case";
 
 export default {
+    props: {
+        loading: {
+            type: Boolean,
+            default: false,
+        }
+    },
     computed: {
         jsConvert() {
             return jsConvert
