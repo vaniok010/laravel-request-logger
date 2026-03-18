@@ -96,6 +96,7 @@ final class RequestLogger
 
     private function shouldIgnorePath(Request $request): bool
     {
+        /** @var array<string> $ignorePaths */
         $ignorePaths = Config::array('request-logger.ignore_paths', []);
         $ignorePaths = array_unique(array_merge($ignorePaths, ['request-logs*']));
 
@@ -127,6 +128,10 @@ final class RequestLogger
         $samplingRates = Config::array('request-logger.sampling.rates', []);
         $statusGroup = mb_substr((string)$statusCode, 0, 1).'xx';
         $samplingRate = $samplingRates[$statusGroup] ?? 100.0;
+
+        if (!is_int($samplingRate) && !is_float($samplingRate)) {
+            return true;
+        }
 
         if ($samplingRate >= 100.0) {
             return true;

@@ -107,6 +107,7 @@ class Database implements Store
             ->subDays(Config::integer('request-logger.log_keep_days') - 1)
             ->startOfDay();
 
+        /** @var array<int, int> $logsToDelete */
         $logsToDelete = RequestLog::query()
             ->whereDate('sent_at', '<', $lastDate)
             ->pluck('fingerprint_id', 'id')

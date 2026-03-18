@@ -51,15 +51,19 @@ class JsonFormatter implements Formatter
             return null;
         }
 
-        return collect($request->allFiles())->map(fn (UploadedFile $file) => [
-            'originalName' => $file->getClientOriginalName(),
-            'mimeType' => $file->getClientMimeType(),
-            'error' => $file->getError(),
-            'originalPath' => $file->getRealPath(),
-            'hashName' => rescue(fn () => $file->hashName()),
-            'pathName' => $file->getPath(),
-            'fileName' => $file->getFilename(),
-        ])->values()->toArray();
+        return collect($request->allFiles())
+            ->flatten()
+            ->map(fn (UploadedFile $file) => [
+                'originalName' => $file->getClientOriginalName(),
+                'mimeType' => $file->getClientMimeType(),
+                'error' => $file->getError(),
+                'originalPath' => $file->getRealPath(),
+                'hashName' => rescue(fn () => $file->hashName()),
+                'pathName' => $file->getPath(),
+                'fileName' => $file->getFilename(),
+            ])
+            ->values()
+            ->toArray();
     }
 
     public function formatResponseContent(Response $response): string
