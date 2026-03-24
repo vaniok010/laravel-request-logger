@@ -80,9 +80,9 @@ final class RequestLogger
         return round((microtime(true) - $startTime) * 1000);
     }
 
-    private function getMemoryUsage(): float
+    private function getMemoryUsage(): int
     {
-        return round(memory_get_peak_usage(true) / 1024 / 1024, 1);
+        return (int)round(memory_get_peak_usage(true) / 1024 / 1024);
     }
 
     public function getFingerprint(): string

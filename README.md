@@ -27,7 +27,6 @@ You can view your logs through a dedicated panel at `https://your.domain/request
 
 - PHP 8.2 or higher
 - Laravel 11 or higher
-- MySQL 5.7 or higher
 
 ## Installation
 

@@ -15,7 +15,7 @@ final class LogData
         public Response $response,
         public Carbon $sentAt,
         public int|float $durationMs,
-        public float $memoryUsage,
+        public int $memoryUsage,
         public string $fingerprint,
         public array $customFields
     ) {
