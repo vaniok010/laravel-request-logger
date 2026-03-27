@@ -58,10 +58,12 @@ class Database implements Store
     public function create(LogData $logData): void
     {
         try {
+            $fingerprintsTable = (new RequestLogFingerprint())->getTable();
+
             RequestLogFingerprint::query()->upsert(
                 ['fingerprint' => $logData->fingerprint, 'repeats' => 1],
                 ['fingerprint'],
-                ['repeats' => DB::raw('request_logs_fingerprints.repeats + 1')]
+                ['repeats' => DB::raw("$fingerprintsTable.repeats + 1")]
             );
 
             $fingerprint = RequestLogFingerprint::query()->where('fingerprint', $logData->fingerprint)->firstOrFail();
