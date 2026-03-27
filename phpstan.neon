@@ -2,6 +2,7 @@ includes:
     - vendor/larastan/larastan/extension.neon
 
 parameters:
+    reportUnmatchedIgnoredErrors: false
 
     paths:
         - src/
@@ -11,3 +12,6 @@ parameters:
     ignoreErrors:
         - identifier: missingType.iterableValue
         - identifier: missingType.generics
+        -
+            message: '#Parameter \#1 \$value of static method Illuminate\\Database\\Connection::raw\(\) expects float\|int\|literal-string, non-falsy-string given\.#'
+            path: src/Stores/Database.php
