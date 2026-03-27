@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hryha\RequestLogger\Tests;
 
 use Hryha\RequestLogger\Models\RequestLog;
+use Hryha\RequestLogger\Models\RequestLogFingerprint;
 use Hryha\RequestLogger\RequestLogger;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -22,6 +23,7 @@ class RequestLoggerTest extends TestCase
         $requestLogger->save($request, $response);
 
         $this->assertDatabaseCount(RequestLog::class, 1);
+        $this->assertDatabaseCount(RequestLogFingerprint::class, 1);
     }
 
     public function test_if_logger_is_disabled_logs_would_not_save(): void

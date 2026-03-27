@@ -26,7 +26,7 @@ abstract class TestCase extends Orchestra
     protected function defineEnvironment($app): void
     {
         tap($app['config'], function (Repository $config): void {
-            $config->set('request-logger.table_name', 'request_logs');
+            $config->set('request-logger.table_name', uniqid('request_logs_'));
         });
     }
 
